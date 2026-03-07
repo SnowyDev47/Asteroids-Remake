@@ -13,3 +13,4 @@ game_state.jsonl
 .python-version
 uv.lock
 .venv
+game_events.jsonl

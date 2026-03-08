@@ -14,3 +14,4 @@ game_state.jsonl
 uv.lock
 .venv
 game_events.jsonl
+to_do_list.txt

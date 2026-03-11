@@ -11,6 +11,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 
+# Main Function
 
 def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
@@ -20,28 +21,43 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
+    
+    #ScoreBoard
+    player_score = 0
+    score_font = pygame.font.SysFont("Arial", 36)
+
+
+
     #GROUPS
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+    
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
     Shot.containers = (shots, updatable, drawable)
+    
     #PLAYER
     player_instance = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    
     #ASTEROID FIELD
     asteroid_field = AsteroidField()
 
 
+    #Game Loop
     while True:
         log_state()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print("You quit!")
+                print(f"Your score was: {player_score}")
                 return
         dt = clock.tick(60) / 1000
         screen.fill("black")
+        scoreboard = score_font.render(f"Score: {player_score}", True, (255, 255, 255))
+        screen.blit(scoreboard, (SCREEN_WIDTH / 2, 10))
         for it in drawable:
             it.draw(screen)
         for it in updatable:
@@ -49,7 +65,8 @@ def main():
         for asteroid in asteroids:
             if asteroid.collides_with(player_instance) == True:
                 log_event("player_hit")
-                print("Game over!")
+                print("You died!")
+                print(f"Your score was: {player_score}")
                 sys.exit()
         for asteroid in asteroids:
             for shot in shots:
@@ -57,6 +74,8 @@ def main():
                     log_event("asteroid_shot")
                     shot.kill()
                     asteroid.split()
+                    player_score += 10
+        pygame.display.update()
         pygame.display.flip()
         
 
